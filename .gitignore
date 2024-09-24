@@ -1,0 +1,7 @@
+.svn/
+.git/
+.vs/
+.vscode
+vendor/
+bin/
+.idea/
