@@ -1,6 +1,10 @@
 #include <iostream>
+#include <QApplication>
+#include <QDebug>
 
-int main() {
+int main(int argc, char* argv[]) {
 
-	return 0;
+	QApplication a(argc, argv);
+	qDebug() << "test...";
+	return a.exec();
 }
