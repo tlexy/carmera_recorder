@@ -1,15 +1,22 @@
 ﻿cmake_minimum_required(VERSION 3.20)
 
-project(camera_recorder)
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+project(camera_recorder)
+
+if(CMAKE_VERSION VERSION_LESS "3.7.0")
+    set(CMAKE_INCLUDE_CURRENT_DIR ON)
+endif()
+
 # 设置QT路径
+set(QT_BIN_DIR D:/Qt/Qt5.12.12/5.12.12/msvc2017_64/bin)
 #set(Qt5_DIR C:/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5)
 #set(CMAKE_MODULE_PATH C:/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5)
 set(Qt5_DIR D:/Qt/Qt5.12.12/5.12.12/msvc2017_64/lib/cmake/Qt5)
+
+#set(CMAKE_BUILD_TYPE Debug)
 
 if (CMAKE_CL_64) 
     if (CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -35,12 +42,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
     # set(CATCH2_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cotton-third_party/Catch2/src)
     # set(CATCH2_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cotton-third_party/out/build/${BUILD_TYPE}/${CMAKE_SYSTEM_NAME}/lib)
-else()
-    # set(JSONCPP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cotton-third_party/jsoncpp/include)
-    # set(JSONCPP_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cotton-third_party/jsoncpp/build/lib)
-
-    # set(CATCH2_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cotton-third_party/Catch2-devel/src)
-    # set(CATCH2_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cotton-third_party/Catch2-devel/build/src)
 endif()
 
 set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/out/build/${BUILD_TYPE})
@@ -69,50 +70,31 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     #     Catch2Maind.lib
     #     jsoncpp_static.lib
     # )
-else()
-    # set(BOOST_LIBS 
-	# 	boost_filesystem
-	# )
-	# set(BOOST_LIBS_DIR
-	# 	${SDK_DIR}/../boost_1_83_0/stage/lib
-	# )
-	# set(BOOST_INCLUDE_DIR
-	# 	${SDK_DIR}/../boost_1_83_0
-	# )
-    # set(COTTON_THIRD_STATIC_LIB 
-    # cotton
-    # Catch2
-    # Catch2Main
-    # jsoncpp
-    # )
 endif()
-
-#add_definitions(-D_NO_CRT_STDIO_INLINE)
-
-# if (COTTON_STATIC)
-# 	add_definitions(-DCOTTON_STATIC)
-# 	include_directories(${SDK_DIR})
-#     include_directories(${THIRD_PARTY_INCLUDE_DIR})
-#     include_directories(${BOOST_INCLUDE_DIR})
-
-#     link_directories(${THIRD_PARTY_DIR}/lib)
-#     link_directories(${BOOST_LIBS_DIR})
-# endif()
-
-set(SRCS 
-main.cpp)
-
-add_executable(${PROJECT_NAME} ${SRCS})
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} 
+include_directories(${SDK_DIR})
+#add_definitions(-D_NO_CRT_STDIO_INLINE)
+
+# 包含Q_OBJECT的头文件也要添加到这里
+file(GLOB SRCS 
+./*.cpp
+ui/*.h
+ui/*.cpp
+)
+
+add_executable(${PROJECT_NAME} WIN32 ${SRCS})
+
+#set_target_properties(${PROJECT_NAME} PROPERTIES AUTOMOC TRUE)
+
+target_link_libraries(${PROJECT_NAME}
 Qt5::Widgets
 )
 
-#add_subdirectory(./cotton)
-#add_subdirectory(./examples)
-#add_subdirectory(./examples/test_rename)
-#add_subdirectory(./examples/test1)
-#add_subdirectory(./examples/test_parser)
-#add_subdirectory(./examples/test_pbxproj)
+if (EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/qt_zh_CN.qm)
+    message("file exists")
+else ()
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
+        COMMAND ${QT_BIN_DIR}/windeployqt ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+endif()
