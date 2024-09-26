@@ -1,0 +1,1 @@
+cmake -S . -B out/build -DQt5_DIR=D:/Qt/Qt5.12.12/5.12.12/msvc2017_64/lib/cmake/Qt5

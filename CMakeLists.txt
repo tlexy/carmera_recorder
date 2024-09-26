@@ -7,8 +7,9 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 # 设置QT路径
-set(Qt5_DIR C:/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5)
+#set(Qt5_DIR C:/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5)
 #set(CMAKE_MODULE_PATH C:/Qt/Qt5.14.2/5.14.2/msvc2017_64/lib/cmake/Qt5)
+set(Qt5_DIR D:/Qt/Qt5.12.12/5.12.12/msvc2017_64/lib/cmake/Qt5)
 
 if (CMAKE_CL_64) 
     if (CMAKE_BUILD_TYPE MATCHES "Debug")
