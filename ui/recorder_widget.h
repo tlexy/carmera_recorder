@@ -1,5 +1,7 @@
 ﻿#include <QWidget>
 
+#pragma execution_character_set("utf-8")
+
 class QBoxLayout;
 
 class RecorderWidget : public QWidget 

@@ -6,6 +6,8 @@
 #include <QComboBox>
 #include <QPushButton>
 
+#pragma execution_character_set("utf-8")
+
 RecorderWidget::RecorderWidget()
     :QWidget(nullptr)
 {}
@@ -27,14 +29,17 @@ void RecorderWidget::initLayout()
     bodyLeftLayout->addLayout(deviceLayout);
     bodyLeftLayout->addSpacing(20);
     bodyLeftLayout->addLayout(getPathLayout());
+    bodyLeftLayout->addSpacing(20);
+    bodyLeftLayout->addLayout(getOptionLayout());
     bodyLeftLayout->addStretch();
 
 
-    bodyLayout->addLayout(bodyLeftLayout);
-    bodyLayout->addLayout(bodyRightLayout);
+    bodyLayout->addLayout(bodyLeftLayout, 2);
+    bodyLayout->addLayout(bodyRightLayout, 3);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
+    mainLayout->addSpacing(10);
     mainLayout->addWidget(title);
     mainLayout->addSpacing(50);
     mainLayout->addLayout(bodyLayout);
@@ -102,4 +107,27 @@ QBoxLayout* RecorderWidget::getOptionLayout()
     QComboBox* cb_fps = new QComboBox;
     QComboBox* cb_pic = new QComboBox;
     QComboBox* cb_hwenc = new QComboBox;
+
+    layout1->addWidget(lbl_option);
+    layout1->addStretch();
+
+    layout2->addWidget(lbl_rate);
+    layout2->addWidget(le_rate);
+
+    layout3->addWidget(lbl_fps);
+    layout3->addWidget(cb_fps);
+
+    layout4->addWidget(lbl_pic);
+    layout4->addWidget(cb_pic);
+
+    layout5->addWidget(lbl_hwenc);
+    layout5->addWidget(cb_hwenc);
+
+    layout->addLayout(layout1);
+    layout->addLayout(layout2);
+    layout->addLayout(layout3);
+    layout->addLayout(layout4);
+    layout->addLayout(layout5);
+
+    return layout;
 }
