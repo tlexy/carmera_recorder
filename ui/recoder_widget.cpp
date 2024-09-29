@@ -32,6 +32,8 @@ void RecorderWidget::initLayout()
     bodyLeftLayout->addSpacing(20);
     bodyLeftLayout->addLayout(getOptionLayout());
     bodyLeftLayout->addStretch();
+    bodyLeftLayout->addLayout(getBtnLayout());
+    bodyLeftLayout->addSpacing(20);
 
 
     bodyLayout->addLayout(bodyLeftLayout, 2);
@@ -56,14 +58,14 @@ QBoxLayout* RecorderWidget::getDeviceLayout()
     QLabel* lbl_camera = new QLabel(tr("摄像头"));
     QLabel* lbl_mic = new QLabel(tr("麦克风"));
 
-    QLineEdit* le_camera = new QLineEdit;
-    QLineEdit* le_mic = new QLineEdit;
+    QComboBox* cb_camera = new QComboBox;
+    QComboBox* cb_mic = new QComboBox;
 
     hLayout1->addWidget(lbl_camera);
-    hLayout1->addWidget(le_camera);
+    hLayout1->addWidget(cb_camera);
 
     hLayout2->addWidget(lbl_mic);
-    hLayout2->addWidget(le_mic);
+    hLayout2->addWidget(cb_mic);
 
     layout->addLayout(hLayout1);
     layout->addLayout(hLayout2);
@@ -130,4 +132,22 @@ QBoxLayout* RecorderWidget::getOptionLayout()
     layout->addLayout(layout5);
 
     return layout;
+}
+
+QBoxLayout* RecorderWidget::getBtnLayout()
+{
+    QHBoxLayout* hLayout = new QHBoxLayout;
+    hLayout->addStretch();
+
+    QPushButton* btn_pause = new QPushButton(tr("暂停"));
+    QPushButton* btn_start = new QPushButton(tr("开始录制"));
+    QPushButton* btn_stop = new QPushButton(tr("结束录制"));
+
+    btn_stop->setVisible(false);
+    hLayout->addWidget(btn_pause);
+    hLayout->addSpacing(30);
+    hLayout->addWidget(btn_start);
+    hLayout->addWidget(btn_stop);
+
+    return hLayout;
 }

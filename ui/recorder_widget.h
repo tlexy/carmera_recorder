@@ -16,4 +16,5 @@ private:
     QBoxLayout* getDeviceLayout();
     QBoxLayout* getPathLayout();
     QBoxLayout* getOptionLayout();
+    QBoxLayout* getBtnLayout();
 };
