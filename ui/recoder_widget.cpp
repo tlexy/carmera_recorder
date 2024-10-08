@@ -6,6 +6,8 @@
 #include <QComboBox>
 #include <QPushButton>
 
+#include "win_capturer/mf_device.h"
+
 #pragma execution_character_set("utf-8")
 
 RecorderWidget::RecorderWidget()
@@ -49,6 +51,15 @@ void RecorderWidget::initLayout()
     setLayout(mainLayout);
 }
 
+void RecorderWidget::initDevice()
+{
+    auto video_devices = MfDevice::get_video_devices();
+    for (auto ptr : video_devices)
+    {
+        _cb_camera->addItem(QString::fromStdWString(ptr->name));
+    }
+}
+
 QBoxLayout* RecorderWidget::getDeviceLayout()
 {
     QVBoxLayout* layout = new QVBoxLayout;
@@ -58,14 +69,14 @@ QBoxLayout* RecorderWidget::getDeviceLayout()
     QLabel* lbl_camera = new QLabel(tr("摄像头"));
     QLabel* lbl_mic = new QLabel(tr("麦克风"));
 
-    QComboBox* cb_camera = new QComboBox;
-    QComboBox* cb_mic = new QComboBox;
+    _cb_camera = new QComboBox;
+    _cb_mic = new QComboBox;
 
     hLayout1->addWidget(lbl_camera);
-    hLayout1->addWidget(cb_camera);
+    hLayout1->addWidget(_cb_camera);
 
     hLayout2->addWidget(lbl_mic);
-    hLayout2->addWidget(cb_mic);
+    hLayout2->addWidget(_cb_mic);
 
     layout->addLayout(hLayout1);
     layout->addLayout(hLayout2);

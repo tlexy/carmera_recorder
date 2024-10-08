@@ -82,6 +82,7 @@ file(GLOB SRCS
 ./*.cpp
 ui/*.h
 ui/*.cpp
+win_capturer/*.cpp
 )
 
 add_executable(${PROJECT_NAME} WIN32 ${SRCS})
