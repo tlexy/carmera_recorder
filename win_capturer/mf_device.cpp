@@ -94,6 +94,7 @@ HRESULT MfDevice::get_video_abilities(int index, IMFActivate** imf, std::shared_
         &videoReader);
     if (!SUCCEEDED(hr))
     {
+        imf[index]->ShutdownObject();
         return hr;
     }
     DWORD dwMediaTypeIndex = 0;
@@ -140,6 +141,7 @@ HRESULT MfDevice::get_video_abilities(int index, IMFActivate** imf, std::shared_
         //颜色转换
         ptr->video_abilities.push_back(ability);
     }
+    imf[index]->ShutdownObject();
     return S_OK;
 }
 
