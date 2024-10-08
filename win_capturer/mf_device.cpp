@@ -1,9 +1,11 @@
-﻿#include "win_capturer/mf_device.h"
-#include <Windows.h>
+﻿#include <Windows.h>
+#include "win_capturer/mf_device.h"
 //#include <mfapi.h>
+#include <mfreadwrite.h>
 #include <mfidl.h>
 #include <mferror.h>
 #include <stdint.h>
+#include <iostream>
 
 std::vector<std::shared_ptr<DeviceUnit>> MfDevice::video_devices;
 IMFAttributes* MfDevice::video_attri = NULL;
@@ -57,11 +59,117 @@ std::vector<std::shared_ptr<DeviceUnit>> MfDevice::get_video_devices()
             auto ptr = std::make_shared<DeviceUnit>();
             ptr->index = i;
             ptr->name = str;
-            video_devices.push_back(ptr);
+            //获取设备能力
+            hr = get_video_abilities(i, ppDevices, ptr);
+            if (hr == S_OK)
+            {
+                video_devices.push_back(ptr);
+                ppDevices[i]->Release();
+            }
+            else
+            {
+                std::wcerr << "index " << i << " device not available: " << str << std::endl;
+            }
+            CoTaskMemFree(szFriendlyName);
         }
-        CoTaskMemFree(szFriendlyName);
+        
     }
+    CoTaskMemFree(ppDevices);
     return video_devices;
+}
+
+HRESULT MfDevice::get_video_abilities(int index, IMFActivate** imf, std::shared_ptr<DeviceUnit> ptr)
+{
+    IMFMediaSource* source = NULL;
+    HRESULT hr = imf[index]->ActivateObject(IID_PPV_ARGS(&source));
+    if (!SUCCEEDED(hr))
+    {
+        return hr;
+    }
+    auto attri = video_attribute();
+    IMFSourceReader* videoReader = NULL;
+    hr = MFCreateSourceReaderFromMediaSource(
+        source,
+        attri,
+        &videoReader);
+    if (!SUCCEEDED(hr))
+    {
+        return hr;
+    }
+    DWORD dwMediaTypeIndex = 0;
+    int limit = 0;
+    while (true) {
+        IMFMediaType* nativeTypes = NULL;
+        hr = videoReader->GetNativeMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM,
+            dwMediaTypeIndex, &nativeTypes);
+        if (hr == MF_E_NO_MORE_TYPES)
+        {
+            break;
+        }
+        if (!SUCCEEDED(hr))
+        {
+            break;
+        }
+        if (limit > 10000)
+        {
+            std::cout << "limitation too big, something error." << std::endl;
+            break;
+        }
+        ++limit;
+        ++dwMediaTypeIndex;
+        VideoDeviceAbility ability;
+        ability.color = DeviceColorOuput::MF_NONE;
+
+        GUID subType;
+        WCHAR* pGuidName = NULL;
+        hr = nativeTypes->GetGUID(MF_MT_SUBTYPE, &subType);
+        if (SUCCEEDED(hr))
+        {
+            ability.color = to_std_color(subType);
+        }
+        GetGUIDName(subType, &pGuidName);
+
+        UINT32 width = 0, height = 0, fpsNum = 0, fpsDen = 0;
+        MFGetAttributeSize(nativeTypes, MF_MT_FRAME_SIZE, &width, &height);
+        MFGetAttributeRatio(nativeTypes, MF_MT_FRAME_RATE, &fpsNum, &fpsDen);
+        
+        ability.fps_den = fpsDen;
+        ability.fps_num = fpsNum;
+        ability.width = width;
+        ability.height = height;
+        //颜色转换
+        ptr->video_abilities.push_back(ability);
+    }
+    return S_OK;
+}
+
+DeviceColorOuput MfDevice::to_std_color(const GUID& guid)
+{
+    if (guid == MFVideoFormat_I420)
+    {
+        return DeviceColorOuput::MF_I420;
+    }
+    if (guid == MFVideoFormat_IYUV)
+    {
+        return DeviceColorOuput::MF_IYUV;
+    }
+    if (guid == MFVideoFormat_MJPG)
+    {
+        return DeviceColorOuput::MF_MJPG;
+    }
+    if (guid == MFVideoFormat_NV12)
+    {
+        return DeviceColorOuput::MF_NV12;
+    }
+    if (guid == MFVideoFormat_YUY2)
+    {
+        return DeviceColorOuput::MF_YUY2;
+    }
+    if (guid == MFVideoFormat_YVYU)
+    {
+        return DeviceColorOuput::MF_YVYU;
+    }
+    return DeviceColorOuput::MF_NONE;
 }
 
 IMFAttributes* MfDevice::video_attribute()

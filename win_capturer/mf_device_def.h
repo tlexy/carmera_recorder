@@ -2,12 +2,7 @@
 #define MF_DEVICE_DEF_H
 
 #include <string>
-
-struct DeviceUnit
-{
-	int index;
-	std::wstring name;
-};
+#include <vector>
 
 enum class DeviceColorOuput
 {
@@ -16,7 +11,8 @@ enum class DeviceColorOuput
 	MF_NV12 = 2,
 	MF_MJPG = 3,
 	MF_I420 = 4,
-	MF_YVYU = 5
+	MF_YVYU = 5,
+	MF_IYUV = 6
 };
 
 struct VideoDeviceAbility
@@ -26,6 +22,13 @@ struct VideoDeviceAbility
 	int width;
 	int height;
 	DeviceColorOuput color;
+};
+
+struct DeviceUnit
+{
+	int index;
+	std::wstring name;
+	std::vector<VideoDeviceAbility> video_abilities;
 };
 
 #endif

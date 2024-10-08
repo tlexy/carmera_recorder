@@ -17,6 +17,7 @@ set(QT_BIN_DIR D:/Qt/Qt5.12.12/5.12.12/msvc2017_64/bin)
 set(Qt5_DIR D:/Qt/Qt5.12.12/5.12.12/msvc2017_64/lib/cmake/Qt5)
 
 #set(CMAKE_BUILD_TYPE Debug)
+add_definitions(-DUNICODE)
 
 if (CMAKE_CL_64) 
     if (CMAKE_BUILD_TYPE MATCHES "Debug")
