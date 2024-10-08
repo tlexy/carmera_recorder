@@ -52,7 +52,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_SYSTEM_NAME}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_SYSTEM_NAME}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_SYSTEM_NAME}/bin)
 
-set(COTTON_STATIC ON)
+set(YUV_PATH ${SDK_DIR}/3rd/libyuv)
+
+#set(COTTON_STATIC ON)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 	add_definitions(-DWIN32)
@@ -76,13 +78,20 @@ endif()
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 include_directories(${SDK_DIR})
+include_directories(${YUV_PATH}/include)
 #add_definitions(-D_NO_CRT_STDIO_INLINE)
+
+
+set(OTHER_LIBS 
+yuv.lib 
+)
 
 # 包含Q_OBJECT的头文件也要添加到这里
 file(GLOB SRCS 
 ./*.cpp
 ui/*.h
 ui/*.cpp
+win_capturer/*.h
 win_capturer/*.cpp
 )
 
@@ -92,7 +101,10 @@ add_executable(${PROJECT_NAME} WIN32 ${SRCS})
 
 target_link_libraries(${PROJECT_NAME}
 Qt5::Widgets
+${OTHER_LIBS}
 )
+
+add_subdirectory(./3rd/libyuv)
 
 if (EXISTS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translations/qt_zh_CN.qm)
     message("file exists")

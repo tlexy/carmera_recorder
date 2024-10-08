@@ -5,8 +5,10 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QPushButton>
+#include <QDebug>
 
 #include "win_capturer/mf_device.h"
+#include "win_capturer/video_capturer.h"
 
 #pragma execution_character_set("utf-8")
 
@@ -53,8 +55,8 @@ void RecorderWidget::initLayout()
 
 void RecorderWidget::initDevice()
 {
-    auto video_devices = MfDevice::get_video_devices();
-    for (auto ptr : video_devices)
+   _video_devices = MfDevice::get_video_devices();
+    for (auto ptr : _video_devices)
     {
         _cb_camera->addItem(QString::fromStdWString(ptr->name));
     }
@@ -154,6 +156,8 @@ QBoxLayout* RecorderWidget::getBtnLayout()
     QPushButton* btn_start = new QPushButton(tr("开始录制"));
     QPushButton* btn_stop = new QPushButton(tr("结束录制"));
 
+    connect(btn_start, &QPushButton::clicked, this, &RecorderWidget::slot_start);
+
     btn_stop->setVisible(false);
     hLayout->addWidget(btn_pause);
     hLayout->addSpacing(30);
@@ -161,4 +165,16 @@ QBoxLayout* RecorderWidget::getBtnLayout()
     hLayout->addWidget(btn_stop);
 
     return hLayout;
+}
+
+////////////////////////
+
+void RecorderWidget::slot_start()
+{
+    int width = 1280;
+    int height = 720;
+    int fps = 30;
+    _video_capturer = std::make_shared<VideoCapturer>(width, height, fps, 0);
+    int ret = _video_capturer->start_capture();
+    qDebug() << "start_capture, ret = " << ret;
 }
