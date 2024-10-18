@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+// @ https://learn.microsoft.com/zh-cn/windows/win32/medfound/video-subtype-guids
 enum class DeviceColorOuput
 {
 	MF_NONE = 0,

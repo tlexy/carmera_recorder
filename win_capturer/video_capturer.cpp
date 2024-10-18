@@ -31,7 +31,8 @@ int VideoCapturer::start_capture()
 		return -2;
 	}
 
-	//选择一种颜色空间
+	//对颜色空间进行排序
+	//轮询每一种颜色空间进行录制
 
 	return 0;
 }

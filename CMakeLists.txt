@@ -93,6 +93,7 @@ ui/*.h
 ui/*.cpp
 win_capturer/*.h
 win_capturer/*.cpp
+video_frame/*.cpp
 )
 
 add_executable(${PROJECT_NAME} WIN32 ${SRCS})

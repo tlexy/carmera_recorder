@@ -5,7 +5,7 @@
 #include <vector>
 #include <mfapi.h>
 
-#include "win_capturer/mf_device_def.h"
+#include "base/mf_device_def.h"
 #include "win_capturer/win_capturer_helper.h"
 
 class MfDevice
