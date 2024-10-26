@@ -14,7 +14,24 @@ I420Buffer::I420Buffer(IMFMediaBuffer* buffer, int width, int height, DeviceColo
 
 I420Buffer::I420Buffer(int width, int height, DeviceColorOuput videoSubType)
 	:YuvBuffer(width, height, videoSubType)
-{}
+{
+	_pp_buffer = (uint8_t*)malloc(0);
+}
+
+uint8_t* I420Buffer::MutableDataY()
+{
+	return const_cast<uint8_t*>(DataY());
+}
+
+uint8_t* I420Buffer::MutableDataU()
+{
+	return const_cast<uint8_t*>(DataU());
+}
+
+uint8_t* I420Buffer::MutableDataV()
+{
+	return const_cast<uint8_t*>(DataV());
+}
 
 const uint8_t* I420Buffer::DataY() const
 {

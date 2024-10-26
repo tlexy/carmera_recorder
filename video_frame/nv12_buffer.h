@@ -1,22 +1,20 @@
-﻿#ifndef I420_BUFFER_H
-#define I420_BUFFER_H
+﻿#ifndef NV12_BUFFER_H
+#define NV12_BUFFER_H
 
 #include <stdint.h>
 #include "video_frame/yuv_buffer.h"
 
-class I420Buffer : public YuvBuffer
+class Nv12Buffer : public YuvBuffer
 {
 public:
-	I420Buffer(IMFMediaBuffer* buffer, int width, int height, DeviceColorOuput videoSubType);
-	I420Buffer(int width, int height, DeviceColorOuput videoSubType);
+	Nv12Buffer(IMFMediaBuffer* buffer, int width, int height, DeviceColorOuput videoSubType);
+	Nv12Buffer(int width, int height, DeviceColorOuput videoSubType);
 
 	const uint8_t* DataY() const;
 	const uint8_t* DataU() const;
 	const uint8_t* DataV() const;
 
-	uint8_t* MutableDataY();
-	uint8_t* MutableDataU();
-	uint8_t* MutableDataV();
+	virtual std::shared_ptr<YuvBuffer> toI420();
 
 	virtual int StrideY() const;
 	virtual int StrideU() const;

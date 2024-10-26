@@ -18,7 +18,7 @@ YuvBuffer::YuvBuffer(int width, int height, DeviceColorOuput videoSubType)
 void YuvBuffer::unlock()
 {
 	if (_win_buffer) {
-		_win_buffer.unlock();
+		_win_buffer->Unlock();
 	}
 }
 

@@ -81,6 +81,8 @@ include_directories(${SDK_DIR})
 include_directories(${YUV_PATH}/include)
 #add_definitions(-D_NO_CRT_STDIO_INLINE)
 
+link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+
 
 set(OTHER_LIBS 
 yuv.lib 
